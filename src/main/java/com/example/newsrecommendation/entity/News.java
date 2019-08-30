@@ -1,5 +1,7 @@
 package com.example.newsrecommendation.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -8,6 +10,7 @@ import java.util.Date;
  * @Date 2019/8/27
  * @Version 1.0
  */
+@Data
 public class News {
     private Integer id;
     private String title;

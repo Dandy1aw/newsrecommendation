@@ -1,4 +1,4 @@
-package com.example.newsrecommendation.util;
+package com.example.newsrecommendation.util.reptile;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;

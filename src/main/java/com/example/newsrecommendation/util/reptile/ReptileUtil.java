@@ -1,10 +1,13 @@
-package com.example.newsrecommendation.util;
+package com.example.newsrecommendation.util.reptile;
 
+import com.example.newsrecommendation.dao.NewsDao;
 import com.example.newsrecommendation.entity.News;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -17,15 +20,15 @@ import java.text.SimpleDateFormat;
  * @Version 1.0
  */
 
+@Service
 public class ReptileUtil {
 
-    private final static String URL_OF_MAIN_PAGE = "http://mil.news.sina.com.cn/roll/index.d.html?cid=57918";
+    @Autowired
+    private NewsDao newsDao;
+
+    private final static String URL_OF_MAIN_PAGE = "http://mil.news.sina.com.cn/roll/index.d.html?cid=57918&page=";
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
-
-    public static void main(String[] args) {
-        reptileMainInfo("http://mil.news.sina.com.cn/roll/index.d.html?cid=57918");
-    }
 
 
     private ReptileUtil() {
@@ -36,7 +39,7 @@ public class ReptileUtil {
      *
      * @param url
      */
-    public static void reptileMainInfo(String url) {
+    public  void reptileMainInfo(String url) {
         /*用于存日期格式*/
 
         Document document = null;
@@ -60,6 +63,7 @@ public class ReptileUtil {
                 news.setUrl(newsUrl);
                 /*对象赋值*/
                 reptileDetailInfo(news, newsUrl);
+                newsDao.insertNews(news);
                 System.out.println(news.toString());
             }
         }
@@ -67,11 +71,12 @@ public class ReptileUtil {
     }
 
     /**
-     *  细节赋值：内容，作者，日期，
-      * @param news
+     * 细节赋值：内容，作者，日期，
+     *
+     * @param news
      * @param newsUrl
      */
-    private static void reptileDetailInfo(News news, String newsUrl) {
+    private  void reptileDetailInfo(News news, String newsUrl) {
         try {
             Document contentDoc = Jsoup.connect(newsUrl).get();
             /*文章作者（来源）*/

@@ -52,7 +52,7 @@
             <button class="btn btn-primary btn-block" type="reset" onclick="reset()">重置</button>
         </div>
         <div class="col-md-5">
-            <button class="btn btn-primary btn-block" type="submit" onclick="doLogin()" >登录</button>
+            <button class="btn btn-primary btn-block" type="submit" onclick="login()" >登录</button>
         </div>
     </div>
 </form>
@@ -82,7 +82,7 @@
                 },
                 success:function (data) {//成功后的返回 数据 在data 中
                     layer.closeAll();//关闭所有的框框
-                    console.log(data);//前台打印 出data
+                    // console.log(data);//前台打印 出data
                     if (data.code == 0){
                         layer.msg("成功");
                         window.location.href = "/index";//跳转主页

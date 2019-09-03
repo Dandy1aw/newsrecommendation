@@ -35,11 +35,12 @@ public class NewsController {
     }
 
 
-    @RequestMapping(value = "/{newsId}") // 前端传入的参数 newsId
-    public String showById(Model model, @PathVariable("newsId") Integer newsId){
+    @RequestMapping(value = "/newsDetail_{newsId}") // 前端传入的参数 newsId
+    public String showDetailsById(Model model, @PathVariable("newsId") Integer newsId){
         News news = newsService.getById(newsId);
         model.addAttribute("news",news);
-        return "index";
+        return "detail";
     }
+
 
 }

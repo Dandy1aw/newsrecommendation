@@ -1,7 +1,6 @@
 package com.example.newsrecommendation.controller;
 
-import com.example.newsrecommendation.entity.News;
-import com.example.newsrecommendation.service.NewsService;
+import com.example.newsrecommendation.util.reptile.ReptileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +16,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class DemoController {
 
     @Autowired
-    private NewsService newsService;
+    private ReptileUtil reptileUtil;
 
-    @RequestMapping("/show/1")
+    /**        爬数据
+     *
+     * @return
+     */
+    @RequestMapping("/reptile")
     @ResponseBody
-    public News showBody(){
-        return newsService.getById(1);
+    public String showBody(){
+        for (int i=2;i<=10;i++){
+            reptileUtil.reptileMainInfo("http://mil.news.sina.com.cn/roll/index.d.html?cid=57918&page="+i);
+        }
+
+        return "OK";
     }
 
 

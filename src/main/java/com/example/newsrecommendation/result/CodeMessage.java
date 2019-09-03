@@ -9,9 +9,13 @@ package com.example.newsrecommendation.result;
 public enum CodeMessage {
     SUCCESS(0, "访问成功"),
     SERVER_ERROR(100, "系统异常"),
+    /* 用户登录 异常*/
     NOT_FOUND_USER(201,"找不到该用户"),
+
     PASSWORD_IS_EMPTY(202,"密码为空"),
-    PASSWORD_ERROR(203,"密码错误")
+    PASSWORD_ERROR(203,"密码错误"),
+
+    /**/
     ;
     private final String msg;
     private final int code;

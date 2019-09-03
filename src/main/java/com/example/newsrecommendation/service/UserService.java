@@ -1,6 +1,10 @@
 package com.example.newsrecommendation.service;
 
 import com.example.newsrecommendation.entity.User;
+import com.example.newsrecommendation.result.Result;
+import com.example.newsrecommendation.vo.LoginVo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Description
@@ -15,5 +19,7 @@ public interface UserService {
     User getByUsername(String username);
 
 
+    Result checkUser(LoginVo loginVo, HttpServletResponse response);
 
+    User getUserByToken(HttpServletResponse response, String realToken);
 }

@@ -1,5 +1,9 @@
 package com.example.newsrecommendation.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -8,12 +12,14 @@ import java.util.Date;
  * @Date 2019/8/29
  * @Version 1.0
  */
+@Data
 public class User {
 	private Integer	id;
 	private String	username;
 	private String	password;
 	private Date	registerDate;
 	private Date	lastLoginTime;
+
 
 	@Override
 	public String toString() {
@@ -27,6 +33,9 @@ public class User {
 		this.password = password;
 		this.registerDate = registerDate;
 		this.lastLoginTime = lastLoginTime;
+	}
+
+	public User() {
 	}
 
 	public Integer getId() {

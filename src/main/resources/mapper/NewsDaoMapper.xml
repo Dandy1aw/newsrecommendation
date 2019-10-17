@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.newsrecommendation.dao.NewsDao">
+    <sql id="Base_Column_List">
+    id, title, genres
+  </sql>
+
+    <!--    List<News> getLookedNewsByUser(Integer userId);-->
+    <select id="getLookedNewsByUser"  resultType="com.example.newsrecommendation.entity.News">
+    select n.* from rating r
+    left join news n on r.news_id=n.id
+    where r.user_id=#{userId,jdbcType=INTEGER}
+  </select>
+
+
+
+    <!-- List<News> getsNewsListByIds(List recommendedItems);-->
+    <select id="getsNewsListByIds" resultType="com.example.newsrecommendation.entity.News">
+        select * from news
+        where id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

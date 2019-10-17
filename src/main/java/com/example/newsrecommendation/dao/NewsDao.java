@@ -1,6 +1,7 @@
 package com.example.newsrecommendation.dao;
 
 import com.example.newsrecommendation.entity.News;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -30,4 +31,11 @@ public interface NewsDao {
     @Insert("INSERT INTO news(title,author,url,content,pubdate) VALUES(#{title},#{author},#{url},#{content},#{pubDate});")
     void insertNews(News news);
 
+
+    @Select("select * from news")
+    Page<News> getNewsList();
+
+    List<News> getsNewsListByIds(List recommendedItems);
+
+    List<News> getLookedNewsByUser(@Param("userId") Integer userId);
 }

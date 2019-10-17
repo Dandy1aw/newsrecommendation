@@ -76,8 +76,6 @@
             <artifactId>htmlunit</artifactId>
             <version>2.29</version>
         </dependency>
-
-
         <!--jedis 依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,8 +109,123 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.38</version>
         </dependency>
+        <!--pageHelper 依赖 分页依赖-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.12</version>
+        </dependency>
+        <!-- mahout 及需要的相关依赖-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-integration</artifactId>
+            <version>0.13.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.hbase</groupId>
+                    <artifactId>hbase-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.solr</groupId>
+                    <artifactId>solr-commons-csv</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-analyzers-common</artifactId>
+                </exclusion>
 
+                <exclusion>
+                    <groupId>com.tdunning</groupId>
+                    <artifactId>t-digest</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>it.unimi.dsi</groupId>
+                    <artifactId>fastutil</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-cli</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-cli</groupId>
+                    <artifactId>commons-cli</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.mahout.commons</groupId>
+                    <artifactId>commons-cli</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jackson-core</artifactId>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--Mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--分词开源项目1 word分词 依赖-->
+            <dependency>
+                <groupId>org.apdplat</groupId>
+                <artifactId>word</artifactId>
+                <version>1.3</version>
+            </dependency>
+        <!--分词开源项目2 hanlp 依赖 -->
+        <dependency>
+            <groupId>com.hankcs</groupId>
+            <artifactId>hanlp</artifactId>
+            <version>portable-1.7.4</version>
+        </dependency>
+        <!--mongoDB 依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <!--rabbitMQ 依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <!--guava依赖-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+        </dependency>
+        <!--aop 依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>

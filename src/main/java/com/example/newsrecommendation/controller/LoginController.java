@@ -1,6 +1,9 @@
 package com.example.newsrecommendation.controller;
 
+import com.example.newsrecommendation.aop.annotation.Log;
 import com.example.newsrecommendation.entity.User;
+import com.example.newsrecommendation.exception.GlobalException;
+import com.example.newsrecommendation.intercepter.AcessLimiter;
 import com.example.newsrecommendation.result.CodeMessage;
 import com.example.newsrecommendation.result.CodeMsg;
 import com.example.newsrecommendation.result.Result;
@@ -59,15 +62,15 @@ public class LoginController {
         log.info(loginVo.toString());
         if (loginVo==null)
         {
-            return Result.error(CodeMessage.SERVER_ERROR);
+            throw new GlobalException(CodeMessage.NOT_LOGIN_ERROR);
         }
 
         String username = loginVo.getUsername();
         String password =loginVo.getPassword();
         if (username ==null || username.isEmpty())
-            return Result.error(CodeMessage.NOT_FOUND_USER);
+            throw new GlobalException(CodeMessage.NOT_FOUND_USER);
         if (password ==null || password.isEmpty())
-            return Result.error(CodeMessage.PASSWORD_IS_EMPTY);
+            throw new GlobalException(CodeMessage.PASSWORD_IS_EMPTY);
 
         Result loginResult = userService.checkUser(loginVo,response);
         return loginResult;

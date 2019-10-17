@@ -2,18 +2,25 @@ package com.example.newsrecommendation.service.Impl;
 
 import com.example.newsrecommendation.dao.UserDao;
 import com.example.newsrecommendation.entity.User;
+import com.example.newsrecommendation.exception.GlobalException;
 import com.example.newsrecommendation.redis.RedisService;
 import com.example.newsrecommendation.redis.prefix.UserKey;
 import com.example.newsrecommendation.result.CodeMessage;
 import com.example.newsrecommendation.result.Result;
 import com.example.newsrecommendation.service.UserService;
+import com.example.newsrecommendation.test.YidianMessage;
 import com.example.newsrecommendation.vo.LoginVo;
 
+import org.apache.http.HttpRequest;
+import org.apache.juli.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -27,6 +34,7 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static  final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     public static  final  String USER_TOKEN = "USER_TOKEN";
 
     @Autowired
@@ -56,13 +64,14 @@ public class UserServiceImpl implements UserService {
         User user = userDao.getByUsername(username);
         if (user==null){
             /*这里需要 抛出异常来显示 为什么false  false由于 找不到用户不存在还是 密码错误*/
-            return Result.error(CodeMessage.NOT_FOUND_USER);
+            throw new GlobalException(CodeMessage.NOT_FOUND_USER);
         }
         String dbPassword = user.getPassword();
         String inputPassword = loginVo.getPassword();
         if (!inputPassword.equals(dbPassword)){
-            return Result.error(CodeMessage.PASSWORD_ERROR);
+            throw new GlobalException(CodeMessage.PASSWORD_ERROR);
         }
+
         /*验证通过 完成登录 写入cookie*/
         String token = UUID.randomUUID().toString().replace("-","");
         addCookie(token,user,response);
@@ -89,10 +98,17 @@ public class UserServiceImpl implements UserService {
      */
     private void addCookie(String token, User user, HttpServletResponse response) {
         /*同时将用户对象 通过 前缀和token值  写入缓存 用于后面拦截器 取出*/
+//        log.info(user.toString());
         redisService.set(UserKey.userToken,token,user);
         Cookie cookie = new Cookie(USER_TOKEN,token);
         cookie.setMaxAge(UserKey.userToken.getExpireSeconds());
         cookie.setPath("/");
         response.addCookie(cookie);
     }
+
+
+//    public String packageJson(YidianMessage yidianMessage){
+//        redisService.set(UserKey.userToken,"key",yidianMessage);
+//        return
+//    }
 }

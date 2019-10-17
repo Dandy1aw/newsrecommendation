@@ -1,11 +1,20 @@
 package com.example.newsrecommendation.redis;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.newsrecommendation.redis.prefix.BasePrefix;
+import com.sun.deploy.util.SyncAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
+import javax.validation.constraints.Future;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description
@@ -16,6 +25,7 @@ import redis.clients.jedis.JedisPool;
 @Service
 public class RedisService {
 
+	private static final Logger log = LoggerFactory.getLogger(RedisService.class);
 	@Autowired
 	private JedisPool jedisPool;
 
@@ -75,6 +85,89 @@ public class RedisService {
 
     }
 
+	/**
+	 *        设置对象列表缓存 存入
+	 * @param prefix
+	 * @param key
+	 * @param <T>
+	 * @return   返回值-0 存入失败， count  成功存入的列表中对象的个数
+	 */
+    public <T> long setObjectList(BasePrefix prefix, String key, List<T> list){
+    	if (StringUtils.isEmpty(key) || prefix==null) return 0;
+    	Jedis jedis = null;
+    	long count = 0;
+    	try {
+			jedis = jedisPool.getResource();
+			String realKey = prefix.getPrefix()+"_"+key;
+			int seconds = prefix.getExpireSeconds();
+			if (jedis.exists(realKey)){
+				jedis.del(realKey);
+			}
+			// 分布式锁 不太会用
+//			if (jedis.setnx("LOCK"+realKey,realKey)==1){
+				if (jedis.exists(realKey)){
+					return 0;
+				}
+				for (T object : list){
+					String objectStr = beanToString(object);
+					log.info(objectStr);
+					//这里要注意存的时候右边存，那么取的时候就从左边取，可以保证列表的顺序一致
+					jedis.rpush(realKey,objectStr);
+					count++;
+				}
+				//设置过期时间
+				if (seconds>0) jedis.expire(realKey,seconds);
+
+		}finally {
+    		returnToPool(jedis);
+		}
+    	return count;
+    }
+
+	/**
+	 *        获取对象列表缓存 取到的是已经反序列化的对象列表
+	 * @param prefix
+	 * @param key
+	 * @param clazz
+	 * @param <T>
+	 * @return
+	 */
+    public <T> List<T> getObjectList(BasePrefix prefix, String key,Class<T> clazz){
+    	if (StringUtils.isEmpty(key)|| prefix == null) return null;
+    	Jedis jedis = null;
+    	List<T> objectList = null;
+    	try {
+    		jedis = jedisPool.getResource();
+    		String realKey = prefix.getPrefix()+"_"+key;
+    		if (jedis.exists(realKey)){
+    			List<String> strList = jedis.lrange(realKey,0,-1);
+    			objectList = new ArrayList<>();
+    			for (String s : strList){
+    				objectList.add(strToBean(s,clazz));
+				}
+			}
+    		return objectList;
+		}finally {
+			returnToPool(jedis);
+		}
+	}
+
+
+	public  boolean exist(BasePrefix prefix, String key)
+	{
+		/**1.获取jedis 客户端 是一个连接，用完必须释放掉 close()方法 返回 连接池 而不是关闭
+		 * */
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();/*调用jedisPool 对象的 getResource()方法 难道 jedis （其实就是一个连接）*/
+			/* 生成 新的 带有前缀的 Key*/
+			String  realKey = prefix.getPrefix() +key;
+			/* 判断该 key 是否存在*/
+			return jedis.exists(realKey);
+		}finally {
+			returnToPool(jedis);
+		}
+	}
     /**
      *        将JSON字符串 转化为对象
      * @param strValue
@@ -82,8 +175,8 @@ public class RedisService {
      * @param <T>
      * @return
      */
-    private <T> T strToBean(String strValue, Class<T> clazz) {
-        if (strValue==null && strValue.isEmpty() && clazz==null) return null;
+    public static   <T> T strToBean(String strValue, Class<T> clazz) {
+        if (strValue==null || strValue.isEmpty() || clazz==null) return null;
         if (clazz == int.class || clazz == Integer.class){
             return (T) Integer.valueOf(strValue);
         }else if (clazz == long.class || clazz == Long.class){
@@ -101,7 +194,7 @@ public class RedisService {
 	 * @param <T>
 	 * @return
 	 */
-	private <T> String beanToString(T value) {
+	public static  <T> String beanToString(T value) {
 		if (value == null)
 			return null;
 		Class<?> clazz = value.getClass();

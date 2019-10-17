@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.newsrecommendation.dao.UserLogDao">
+
+
+    <!--int insertRate(Rate rate);-->
+    <insert id="insertUserLog" parameterType="com.example.newsrecommendation.entity.UserLog">
+        insert into user_log(id,username,operation,gmt_modified) values (#{id},#{username},#{operation},#{gmtModified});
+    </insert>
+
+
+</mapper>

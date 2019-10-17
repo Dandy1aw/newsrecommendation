@@ -21,7 +21,8 @@ public class DataRetationTest {
         BeanUtils.copyProperties(yidianMessage1,yidianMessage2);
         System.out.println("1:"+ yidianMessage1);
         System.out.println("2:"+ yidianMessage2);
-
+        /*=======================================================*/
+        System.out.println("提交1");
         System.out.println("新的改动！！！！！！");
     }
 }
